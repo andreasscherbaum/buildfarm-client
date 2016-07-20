@@ -1,0 +1,47 @@
+git:
+    executable: ""
+    depth: 0
+buildfarm:
+    animal: "???"
+    secret: "???"
+    url: "https://???"
+    send-results: 1
+    enabled: 0
+    add-jobs-only: 0
+repository:
+    url: "https://github.com/greenplum-db/gpdb.git"
+build:
+    dirs:
+        top-dir: "$HOME/postgresql/buildfarm"
+        cache-dir: "$TOPDIR/cache"
+        build-dir: "$TOPDIR/build"
+        install-dir: "$TOPDIR/install"
+    options:
+        no-clean-on-failure: 1
+        no-clean-at-all: 1
+        enable-orca: 0
+        extra-configure: "--with-libxml --with-python --with-perl --enable-mapreduce"
+        extra-make:
+        extra-install:
+        extra-tests:
+        ccache-bin: "ccache"
+        make-parallel: 4
+    work:
+        branch: master
+        revision: HEAD
+    patch:
+    cleanup:
+        cleanup-builds: 0
+        cleanup-patches: 0
+        cleanup-support-files: 0
+test:
+    locales: ""
+    extra-targets: 
+support:
+    executable:
+    disable-support: 0
+    support-dir:
+    support-file:
+    archive-type: "zip"
+locking:
+    lockfile:

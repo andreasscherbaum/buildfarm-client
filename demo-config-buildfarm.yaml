@@ -1,0 +1,43 @@
+git:
+    executable: "/usr/bin/git"
+    depth: 0
+buildfarm:
+    animal: "???"
+    secret: "???"
+    url: "https://???"
+    send-results: 1
+    enabled: 0
+    add-jobs-only: 0
+repository:
+    url: ""
+build:
+    dirs:
+        cache-dir: "$HOME/postgresql/buildfarm/cache"
+        build-dir: "$HOME/postgresql/buildfarm/build"
+        install-dir: "$HOME/postgresql/buildfarm/install"
+    options:
+        no-clean-on-failure: 1
+        no-clean-at-all: 1
+        enable-orca: 0
+        extra-configure:
+        extra-make:
+        extra-install:
+        extra-tests:
+        ccache-bin: "/usr/bin/ccache"
+        make-parallel: 4
+    work:
+        branch: master
+        revision: HEAD
+    patch:
+    cleanup:
+        cleanup-builds: 0
+        cleanup-patches: 0
+        cleanup-support-files: 0
+support:
+    executable:
+    disable-support: 0
+    support-dir:
+    support-file:
+locking:
+    lockfile: "$HOME/postgresql/buildfarm/buildclient-buildfarm.lock"
+
