@@ -629,7 +629,7 @@ for branch in config.get('build-branch'):
 
     # create a repository instance
     repository = Repository(config, database, config.get('repository-url'), config.get('cache-dir'))
-    repository.handle_update(True, log_data)
+    repository.handle_update(config.get('run-update'), log_data)
     # from here on a local copy of the repository is available
 
     log_data['repository_type'] = repository.identify_repository_type(repository.full_path)
