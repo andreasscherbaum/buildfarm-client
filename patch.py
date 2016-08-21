@@ -43,7 +43,8 @@ class Patch:
 
         if (len(self.patches) == 0):
             self.patches_applied = True
-            return
+
+        return
 
 
 
