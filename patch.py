@@ -500,7 +500,7 @@ class Patch:
                     logging.error('HTTPError = ' + str(e.code))
                 sys.exit(1)
             except urllib2.URLError as e:
-                logging.error('URLError = ' + str(e.code))
+                logging.error('URLError = ' + str(e.reason))
                 sys.exit(1)
             except httplib.HTTPException as e:
                 logging.error('HTTPException')
