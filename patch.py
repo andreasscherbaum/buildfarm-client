@@ -237,6 +237,11 @@ class Patch:
             logging.debug("found GitHub Pull Request")
             patch_name = self.download_pull_request(patch)
 
+        elif (patch[0:19] == 'https://github.com/' and patch.find('/issues/') != -1):
+            logging.error("Select Pull Request, instead of Issue")
+            logging.error("Argument: " + patch)
+            return False
+
         elif (patch[0:34] == 'https://commitfest.postgresql.org/'):
             # cannot directly use the commitfest links, patches might appear multiple times
             logging.error("Cannot use CommitFest links")
