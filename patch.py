@@ -64,6 +64,22 @@ class Patch:
 
 
 
+    # set_build_dir()
+    #
+    # set the build directory
+    #
+    # parameter:
+    #  - self
+    #  - build directory
+    # return:
+    #  none
+    def set_build_dir(self, dir):
+        self.build_dir = dir
+
+        return
+
+
+
     # remove_patches_after_build()
     #
     # add all potential patches to the delete process
@@ -74,6 +90,10 @@ class Patch:
     # return:
     #  none
     def remove_patches_after_build(self, build):
+        if (self.build_dir is None):
+            logging.error("'build_dir' is not set!")
+            sys.exit(1)
+
         for patch in self.patches_to_apply:
             len_build_dir = len(self.build_dir)
             len_cache_dir = len(self.cache_dir)
@@ -94,6 +114,10 @@ class Patch:
     # return:
     #  none
     def apply_patches(self):
+        if (self.build_dir is None):
+            logging.error("'build_dir' is not set!")
+            sys.exit(1)
+
         if (self.patches_applied == True):
             logging.error("tried to apply patches twice!")
             sys.exit(1)

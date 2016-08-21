@@ -646,20 +646,28 @@ for branch in config.get('build-branch'):
         # add the revision name, if it's not HEAD
         build_dir_name += '_' + config.get('build-revision')
     if (config.get('run-configure') is True):
-        build_dir = repository.copy_repository(build_dir_name, branch, config.get('build-revision'))
 
-        patch = Patch(config.get('patch'), config, repository, build_dir, config.get('cache-dir'))
+        # create "Patch" instance before creating the repository
+        # https://github.com/andreasscherbaum/buildfarm-client/issues/1
+        patch = Patch(config.get('patch'), config, repository, None, config.get('cache-dir'))
         if (patch.have_patches() is True):
             # retrieve all patches
             result_retrieve_patches = patch.retrieve_patches()
             log_data['patches'] = '|'.join(patch.patches)
-            if (result_retrieve_patches is True):
-                result_apply_patches = patch.apply_patches()
-                if (result_apply_patches is False):
-                    # continue with next branch in list
-                    # don't care about logging, this is manual mode
-                    continue
-            else:
+            if (result_retrieve_patches is False):
+                # retrieving patches failed, don't bother with the rest of the job
+                # continue with next branch in list
+                # don't care about logging, this is manual mode
+                continue
+
+        build_dir = repository.copy_repository(build_dir_name, branch, config.get('build-revision'))
+        # the "Patch" instance is initialized without the build_dir information
+        patch.set_build_dir(build_dir)
+
+        if (patch.have_patches() is True):
+            # patches are already retrieved - error is checked above
+            result_apply_patches = patch.apply_patches()
+            if (result_apply_patches is False):
                 # continue with next branch in list
                 # don't care about logging, this is manual mode
                 continue
