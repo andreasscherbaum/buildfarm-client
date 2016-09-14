@@ -11,7 +11,7 @@ import string
 import atexit
 from lockfile import LockFile, LockTimeout
 from subprocess import Popen
-from distutils.version import StrictVersion
+from distutils.version import LooseVersion
 if sys.version_info[0] < 3:
     reload(sys)
     sys.setdefaultencoding('utf8')
@@ -664,7 +664,7 @@ class Config:
             print("Found: " + self.arguments.git_version)
             sys.exit(1)
         # all git versions below 2.7.1 are vulnerable
-        if (StrictVersion(self.arguments.git_version) <= StrictVersion('2.7.1')):
+        if (LooseVersion(self.arguments.git_version) <= LooseVersion('2.7.1')):
                 logging.warning("git version (" + self.arguments.git_version + ") is vulnerable!")
 
 
