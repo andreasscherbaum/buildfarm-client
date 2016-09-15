@@ -187,6 +187,14 @@ if (config.get('list-results') is True):
 #######################################################################
 # show full result of a previous run
 if (len(config.get('show-result')) > 0):
+    if (config.get('show-result') == 'latest' or config.get('show-result') == 'last'):
+        logging.debug("looking up latest result")
+        data = database.fetch_last_build_status_id()
+        if (str(data['id']) == 'not set'):
+            logging.error("No entries in database!")
+            sys.exit(1)
+        logging.debug("last result has id: " + str(data['id']))
+        config.set('show-result', str(data['id']))
     logging.debug("show one result: " + config.get('show-result'))
     try:
         id = int(config.get('show-result'))

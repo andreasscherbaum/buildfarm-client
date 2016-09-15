@@ -128,7 +128,7 @@ class Config:
         parser.add_argument('--patch', dest = 'patch', action = 'append', help = 'additional patch(es) to apply')
         parser.add_argument('--make-parallel', default = '', dest = 'make_parallel', help = 'number of parallel make jobs (default: 1)')
         parser.add_argument('--list-results', default = False, dest = 'list_results', action = 'store_true', help = 'list all locally stored results of previous runs')
-        parser.add_argument('--show-result', default = '', dest = 'show_result', help = 'show results of a specific build')
+        parser.add_argument('--show-result', default = '', dest = 'show_result', help = 'show results of a specific build (use "last" for latest build)')
         parser.add_argument('--list-jobs', default = False, dest = 'list_jobs', action = 'store_true', help = 'list all pending buildfarm jobs, then exit')
         parser.add_argument('--list-all-jobs', default = False, dest = 'list_all_jobs', action = 'store_true', help = 'list all pending and finished buildfarm jobs, then exit')
         parser.add_argument('--requeue-job', default = '', dest = 'requeue_job', help = 'requeue a buildfarm job')

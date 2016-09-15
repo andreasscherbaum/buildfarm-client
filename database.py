@@ -356,6 +356,22 @@ class Database:
 
 
 
+    # fetch_last_build_status_id()
+    #
+    # fetch the last build status log id (only non-buildfarm builds - interactive)
+    #
+    # parameter:
+    #  - self
+    # return:
+    #  - id for last log entry
+    def fetch_last_build_status_id(self):
+        query = """SELECT COALESCE(MAX(id), 'not set') AS id
+                     FROM build_status
+                    WHERE is_buildfarm = 0"""
+        return self.execute_one(query, [])
+
+
+
     # buildfarm_ran_before()
     #
     # verify if a specific buildfarm job ran before
