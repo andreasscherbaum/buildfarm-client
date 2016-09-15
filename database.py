@@ -187,6 +187,21 @@ class Database:
 
         self.execute_one(query, param)
 
+        # get last inserted ID
+        query = "SELECT last_insert_rowid() AS id"
+        last_id = self.execute_one(query, [])['id']
+        logging.debug("log ID is: " + str(last_id))
+
+        # save the following logging data in the extra table
+        extra_log = ['build_dir', 'install_dir']
+        for k in extra_log:
+            if k in data:
+                query = """INSERT INTO build_additional_data
+                                       (build_status_id, data_key, data_value)
+                                VALUES (?, ?, ?)"""
+                param = [last_id, k, data[k]]
+                self.execute_one(query, param)
+
 
 
     # init_tables()
@@ -210,6 +225,10 @@ class Database:
             logging.debug("need to create table buildfarm_postgresql")
             self.table_buildfarm_postgresql()
 
+        if (self.table_exist('build_additional_data') is False):
+            logging.debug("need to create table build_additional_data")
+            self.table_build_additional_data()
+
 
 
     # drop_tables()
@@ -232,6 +251,10 @@ class Database:
         if (self.table_exist('buildfarm_postgresql') is True):
             logging.debug("drop table buildfarm_postgresql")
             self.drop_table('buildfarm_postgresql')
+
+        if (self.table_exist('build_additional_data') is True):
+            logging.debug("drop table build_additional_data")
+            self.drop_table('build_additional_data')
 
 
 
@@ -352,7 +375,30 @@ class Database:
                           gp_majorversion, gp_version, gp_version_num, steps_buildfarm
                      FROM build_status
                     WHERE id = ?"""
-        return self.execute_one(query, [id])
+        data = self.execute_one(query, [id])
+
+        # data is a sqlite3.Row object, and does not support assignments
+        k = data.keys()
+        data2 = {}
+        for v in k:
+            data2[v] = data[v]
+        data = data2
+
+        # fetch extra data for this build
+        query = """SELECT *
+                     FROM build_additional_data
+                    WHERE build_status_id = ?"""
+        extra_data = self.execute_query(query, [id])
+        for e in extra_data:
+            # skip all keys which are integers
+            k = e['data_key']
+            try:
+                k2 = int(k)
+            except ValueError:
+                # if it's an exception, it's not an integer
+                data[k] = e['data_value']
+
+        return data
 
 
 
@@ -784,6 +830,27 @@ class Database:
                 gp_majorversion TEXT,
                 gp_version TEXT,
                 gp_version_num TEXT
+                )"""
+        self.run_query(query)
+
+
+
+    # table_build_additional_data()
+    #
+    # create the 'build_additional_data' table
+    #
+    # parameter:
+    #  - self
+    # return:
+    #  none
+    def table_build_additional_data(self):
+        query = """CREATE TABLE build_additional_data (
+                id INTEGER PRIMARY KEY NOT NULL,
+                build_status_id INTEGER NOT NULL,
+                data_key TEXT NOT NULL,
+                data_value TEXT,
+                FOREIGN KEY (build_status_id) REFERENCES build_status(id),
+                UNIQUE(build_status_id, data_key)
                 )"""
         self.run_query(query)
 

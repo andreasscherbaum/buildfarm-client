@@ -212,6 +212,41 @@ if (len(config.get('show-result')) > 0):
         print("")
         sys.exit(1)
 
+
+    # first handle all special flags, in case only one data value is to show
+    if (config.get('show-id') is True):
+        print(str(data['id']))
+        sys.exit(0)
+    if (config.get('show-repository') is True):
+        print(str(data['repository']))
+        sys.exit(0)
+    if (config.get('show-branch') is True):
+        print(str(data['branch']))
+        sys.exit(0)
+    if (config.get('show-revision') is True):
+        print(str(data['revision']))
+        sys.exit(0)
+    if (config.get('show-build-dir') is True):
+        if ('build_dir' in data):
+            print(str(data['build_dir']))
+            sys.exit(0)
+        else:
+            print("")
+            print("Error: build dir is not available")
+            print("")
+            sys.exit(1)
+    if (config.get('show-install-dir') is True):
+        if ('install_dir' in data):
+            print(str(data['install_dir']))
+            sys.exit(0)
+        else:
+            print("")
+            print("Error: install dir is not available")
+            print("")
+            sys.exit(1)
+
+
+    # start regular output here
     print("")
     print("{:>17}:  {:s}".format("ID", str(data['id'])))
     print("{:>17}:  {:s}".format("Time", str(data['start_time'])))
@@ -671,6 +706,7 @@ for branch in config.get('build-branch'):
         build_dir = repository.copy_repository(build_dir_name, branch, config.get('build-revision'))
         # the "Patch" instance is initialized without the build_dir information
         patch.set_build_dir(build_dir)
+        log_data['build_dir'] = build_dir
 
         if (patch.have_patches() is True):
             # patches are already retrieved - error is checked above
@@ -702,6 +738,7 @@ for branch in config.get('build-branch'):
                     install_dir = build.run_make_install(config.get('extra-install'), log_data, config.get('extra-make'))
                     if (install_dir is not False):
                         build.add_entry_to_delete_clean(install_dir)
+                        log_data['install_dir'] = install_dir
 
                     if (install_dir is not False and config.get('run-tests') is True):
                         result_tests = build.run_tests(config.get('extra-tests'), log_data)

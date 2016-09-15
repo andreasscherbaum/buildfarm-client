@@ -129,6 +129,12 @@ class Config:
         parser.add_argument('--make-parallel', default = '', dest = 'make_parallel', help = 'number of parallel make jobs (default: 1)')
         parser.add_argument('--list-results', default = False, dest = 'list_results', action = 'store_true', help = 'list all locally stored results of previous runs')
         parser.add_argument('--show-result', default = '', dest = 'show_result', help = 'show results of a specific build (use "last" for latest build)')
+        parser.add_argument('--show-id', default = False, dest = 'show_id', action = 'store_true', help = 'list only the ID for the specified build (requires --show-result)')
+        parser.add_argument('--show-repository', default = False, dest = 'show_repository', action = 'store_true', help = 'list only the repository for the specified build (requires --show-result)')
+        parser.add_argument('--show-branch', default = False, dest = 'show_branch', action = 'store_true', help = 'list only the branch for the specified build (requires --show-result)')
+        parser.add_argument('--show-revision', default = False, dest = 'show_revision', action = 'store_true', help = 'list only the revision for the specified build (requires --show-result)')
+        parser.add_argument('--show-build-dir', default = False, dest = 'show_build_dir', action = 'store_true', help = 'list only the build dir for the specified build (requires --show-result)')
+        parser.add_argument('--show-install-dir', default = False, dest = 'show_install_dir', action = 'store_true', help = 'list only the install dir for the specified build (requires --show-result)')
         parser.add_argument('--list-jobs', default = False, dest = 'list_jobs', action = 'store_true', help = 'list all pending buildfarm jobs, then exit')
         parser.add_argument('--list-all-jobs', default = False, dest = 'list_all_jobs', action = 'store_true', help = 'list all pending and finished buildfarm jobs, then exit')
         parser.add_argument('--requeue-job', default = '', dest = 'requeue_job', help = 'requeue a buildfarm job')
@@ -442,6 +448,35 @@ class Config:
                 print("Error: --show-result can't be combined with another run option")
                 sys.exit(1)
 
+        if (len(self.arguments.show_result) > 0):
+            number_show_args = 0
+            if (self.arguments.show_id is True):
+                number_show_args += 1
+            if (self.arguments.show_repository is True):
+                number_show_args += 1
+            if (self.arguments.show_branch is True):
+                number_show_args += 1
+            if (self.arguments.show_revision is True):
+                number_show_args += 1
+            if (self.arguments.show_build_dir is True):
+                number_show_args += 1
+            if (self.arguments.show_install_dir is True):
+                number_show_args += 1
+            if (number_show_args > 1):
+                print("")
+                print("Error: --show-result only allows one extra argument")
+                sys.exit(1)
+        else:
+            if (self.arguments.show_id is True or
+                self.arguments.show_repository is True or
+                self.arguments.show_branch is True or
+                self.arguments.show_revision is True or
+                self.arguments.show_build_dir is True or
+                self.arguments.show_install_dir is True):
+                print("")
+                print("Error: extra argument specified, but --show-result is missing")
+                sys.exit(1)
+
         if (self.arguments.run_all is True):
             if (len(self.arguments.show_result) > 0 or
                 self.arguments.list_results is True or
@@ -469,6 +504,12 @@ class Config:
             ret['run-make'] = True
             ret['run-install'] = True
             ret['run-tests'] = True
+            ret['show-id'] = False
+            ret['show-repository'] = False
+            ret['show-branch'] = False
+            ret['show-revision'] = False
+            ret['show-build-dir'] = False
+            ret['show-install-dir'] = False
         else:
             ret['show-result'] = self.arguments.show_result if (len(self.arguments.show_result) > 0) else ''
             ret['list-results'] = True if (self.arguments.list_results is True) else False
@@ -480,6 +521,12 @@ class Config:
             ret['run-make'] = True if (self.arguments.run_make is True) else False
             ret['run-install'] = True if (self.arguments.run_install is True) else False
             ret['run-tests'] = True if (self.arguments.run_tests is True) else False
+            ret['show-id'] = True if (self.arguments.show_id is True) else False
+            ret['show-repository'] = True if (self.arguments.show_repository is True) else False
+            ret['show-branch'] = True if (self.arguments.show_branch is True) else False
+            ret['show-revision'] = True if (self.arguments.show_revision is True) else False
+            ret['show-build-dir'] = True if (self.arguments.show_build_dir is True) else False
+            ret['show-install-dir'] = True if (self.arguments.show_install_dir is True) else False
 
         # do not require --run-update
         #if (ret['run-configure'] is True and ret['run-update'] is False):
