@@ -208,7 +208,7 @@ if (len(config.get('show-result')) > 0):
     data = database.fetch_specific_build_status(id)
     if (data is None or len(data) == 0):
         print("")
-        print("Record '" + config.get('show-result') + "' does not exist!")
+        print("Error: record '" + config.get('show-result') + "' does not exist!")
         print("")
         sys.exit(1)
 
