@@ -1050,6 +1050,7 @@ class Config:
                     print("Argument: " + ret['ccache-bin'])
                     print("$CXX: " + os.environ.get('CXX'))
                     sys.exit(1)
+            logging.debug("ccache: " + ret['ccache-bin'])
 
 
         if (self.arguments.make_parallel == ''):
