@@ -1812,7 +1812,7 @@ class Build:
                 print("stdout/stderr:")
                 #print(run[1])
                 print("------------------------------------------")
-                print("\n".join(run[1].splitlines()[(filter_linenum - 10):(filter_linenum + 10)].decode()))
+                print("\n".join(run[1].splitlines()[(filter_linenum - 10):(filter_linenum + 10)]).decode())
                 print("------------------------------------------")
                 print("")
         print("failing command:")
