@@ -881,7 +881,7 @@ class Build:
             f.write("fi" + os.linesep)
             # for debugging purpose:
             #f.write("exit 1" + os.linesep)
-            f.write("make installcheck-good" + os.linesep)
+            f.write("make installcheck-world" + os.linesep)
             f.write("result=$?" + os.linesep)
             f.write("" + os.linesep)
             f.write("cd '" + self.install_dir + "'" + os.linesep)
