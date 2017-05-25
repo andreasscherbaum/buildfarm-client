@@ -985,7 +985,7 @@ class Build:
 
             # add stack traces of any "core*" file found in the tree
             stack_trace = self.stack_traces(self.build_dir)
-            if (len(stack_trace) > 0):
+            if (stack_trace is not None and len(stack_trace) > 0):
                 f = open(os.path.join(self.buildfarm_logs, 'check.log'), 'a')
                 f.write(stack_trace)
                 f.close()
