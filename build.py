@@ -946,7 +946,7 @@ class Build:
             # change this when dynamic ports are used
             f.write("   export PGPORT=15432" + os.linesep)
             f.write("   cd '" + self.build_dir + "'" + os.linesep)
-            f.write("   make -C src/test installcheck-good")
+            f.write("   make -C src/test installcheck-good" + os.linesep)
             f.write("fi" + os.linesep)
             f.close()
             os.chmod(filename, stat.S_IRWXU | stat.S_IRWXG)
