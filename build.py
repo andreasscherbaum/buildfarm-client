@@ -931,6 +931,26 @@ class Build:
             f.close()
             os.chmod(filename, stat.S_IRWXU | stat.S_IRWXG)
 
+
+            # script which will run only installcheck-good
+            filename = os.path.join(self.install_dir, 'buildclient_run_installcheck-good_test.sh')
+            f = open(filename, 'w')
+            f.write('#!/bin/sh' + os.linesep + os.linesep)
+            f.write("cd '" + self.build_dir + "'" + os.linesep)
+            f.write(". '" + os.path.join(self.install_dir, 'greenplum_path.sh') + "'" + os.linesep)
+            f.write("if [ -f '" + os.path.join(self.build_dir, 'gpAux', 'gpdemo', 'gpdemo-env.sh') + "' ];" + os.linesep)
+            f.write("then" + os.linesep)
+            f.write("   . '" + os.path.join(self.build_dir, 'gpAux', 'gpdemo', 'gpdemo-env.sh') + "'" + os.linesep)
+            #f.write("export MASTER_DATA_DIRECTORY='" . os.path.join(self.build_dir, 'gpAux', 'gpdemo', 'datadirs', 'qddir', 'demoDataDir-1') + "'" + os.linesep)
+            f.write("   export PATH='" + os.path.join(self.install_dir, 'bin') + "':$PATH" + os.linesep)
+            # change this when dynamic ports are used
+            f.write("   export PGPORT=15432" + os.linesep)
+            f.write("   cd '" + self.build_dir + "'" + os.linesep)
+            f.write("   make -C src/test installcheck-good")
+            f.write("fi" + os.linesep)
+            f.close()
+            os.chmod(filename, stat.S_IRWXU | stat.S_IRWXG)
+
         return self.install_dir
 
 
