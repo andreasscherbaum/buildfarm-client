@@ -2,7 +2,7 @@
 
 The buildclient has two modi:
 
-* *interactive*: build PostgreSQL or Greenplum, and test new patches
+* *interactive*: build [PostgreSQL](https://www.postgresql.org/) or [Greenplum Database](http://www.greenplum.org/), and test new patches
 * *buildfarm*: build and test new commits, and submit results to the buildfarm
 
 
@@ -88,6 +88,12 @@ The available options are:
 --extra-tests
 ```
 
+Example: build Greenplum Database without GPORCA:
+
+```
+./buildclient.py -v -c demo-config-gpdb.yaml --no-clean-at-all --run-update --run-configure --extra-configure="--disable-orca" --run-make
+```
+
 
 
 ## Apply a patch (only in interactive mode)
@@ -147,7 +153,6 @@ This will show a list of all previous builds, along with an overview of which op
 ```
 
 
-
 ## Buildfarm mode
 
 Add new jobs:
@@ -183,4 +188,10 @@ A job can be re-queued:
 
 ```
 ./buildclient.py -v -c demo-config-buildfarm.yaml --requeue-job <n>
+```
+
+## Cleanup
+
+```
+./buildclient.py -v -c demo-config-buildfarm.yaml --cleanup-builds --cleanup-patches --cleanup-support-files
 ```
