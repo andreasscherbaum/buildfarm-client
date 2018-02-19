@@ -398,8 +398,19 @@ class Repository:
     # return:
     #  - "PostgreSQL" or "Greenplum"
     def identify_repository_type(self, build_dir):
-        # verify if it is a Greenplum repository
+        # verify if it is a Greenplum repository (up to around November 2017)
         files = ['README.PostgreSQL', 'GNUmakefile.in', 'getversion', 'putversion', 'README.debian', 'LICENSE', 'COPYRIGHT']
+        missing_files = False
+        for file in files:
+            if not (os.path.isfile(os.path.join(build_dir, file))):
+                missing_files = True
+        if (missing_files is False):
+            # seems to be a Greenplum repository
+            #logging.debug("repository type: Greenplum")
+            return 'Greenplum'
+
+        # verify if it is a Greenplum repository (starting around November 2017)
+        files = ['README.PostgreSQL', 'GNUmakefile.in', 'getversion', 'putversion', 'README.ubuntu.bash', 'LICENSE', 'COPYRIGHT']
         missing_files = False
         for file in files:
             if not (os.path.isfile(os.path.join(build_dir, file))):
